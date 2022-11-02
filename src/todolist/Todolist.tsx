@@ -1,30 +1,42 @@
 type PropsType = {
     title: string
-    tasks: TasksType[]
+    tasks: TaskType[]
+    removeTask: (id:string)=>void
 }
 
-type TasksType = {
-    id: number
+type TaskType = {
+    id: string
     title: string
     isDone: boolean
+
 }
 
 export const Todolist = (props: PropsType) => {
     return (
         <div>
             <h3>{props.title}</h3>
+            <input/>
+            <button>+</button>
             <div>
-                <input/>
-                <button>+</button>
+                <ul>
+                    {props.tasks.map(el => {
+
+                        const onClickDeleteHandler = () => {
+                            props.removeTask(el.id)
+                        }
+
+                        return (
+                            <li key={el.id}>
+                                <input type="checkbox" checked={el.isDone}/>
+                                <span>{el.title}</span>
+                                <button onClick={onClickDeleteHandler}>X</button>
+                            </li>)
+                    })}
+                </ul>
             </div>
-            <ul>
-                <li><input type={"checkbox"} checked={props.tasks[0].isDone}/>{props.tasks[0].title}</li>
-                <li><input type={"checkbox"} checked={props.tasks[1].isDone}/>{props.tasks[1].title}</li>
-                <li><input type={"checkbox"} checked={props.tasks[2].isDone}/>{props.tasks[2].title}</li>
-            </ul>
             <button>All</button>
             <button>Active</button>
-            <button>React</button>
+            <button>Completed</button>
         </div>
     )
 }
