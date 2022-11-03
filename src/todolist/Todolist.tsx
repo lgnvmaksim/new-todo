@@ -1,11 +1,12 @@
 import {FilteredType} from "../App";
+import {useState} from "react";
 
 type PropsType = {
     title: string
     tasks: TaskType[]
     removeTask: (id:string)=>void
     changeFilter:(value: FilteredType)=>void
-    addTask:()=>void
+    addTask:(title:string)=>void
 }
 
 type TaskType = {
@@ -16,11 +17,20 @@ type TaskType = {
 }
 
 export const Todolist = (props: PropsType) => {
+    let [title, setTitle] = useState('')
+    const addTaskButtonHandler = () => {
+        props.addTask(title)
+        setTitle('')
+    }
     return (
-        <div>
-            <h3>{props.title}</h3>
-            <input/>
-            <button onClick={()=>{props.addTask()}}>+</button>
+        <div className={'wrapper'}>
+            <h3 className={'header'}>{props.title}</h3>
+            <input
+                className={'inputForText'}
+            value={title}
+            onChange={(e)=>{setTitle(e.currentTarget.value)}}
+            onKeyDown={(e)=>{if(e.key==='Enter'){addTaskButtonHandler()}}}/>
+            <button onClick={addTaskButtonHandler} className={'inputButton'}>+</button>
             <div>
                 <ul>
                     {props.tasks.map(el => {
