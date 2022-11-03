@@ -1,7 +1,11 @@
+import {FilteredType} from "../App";
+
 type PropsType = {
     title: string
     tasks: TaskType[]
     removeTask: (id:string)=>void
+    changeFilter:(value: FilteredType)=>void
+    addTask:()=>void
 }
 
 type TaskType = {
@@ -16,7 +20,7 @@ export const Todolist = (props: PropsType) => {
         <div>
             <h3>{props.title}</h3>
             <input/>
-            <button>+</button>
+            <button onClick={()=>{props.addTask()}}>+</button>
             <div>
                 <ul>
                     {props.tasks.map(el => {
@@ -34,9 +38,9 @@ export const Todolist = (props: PropsType) => {
                     })}
                 </ul>
             </div>
-            <button>All</button>
-            <button>Active</button>
-            <button>Completed</button>
+            <button onClick={()=>{props.changeFilter('all')}}>All</button>
+            <button onClick={()=>{props.changeFilter('active')}}>Active</button>
+            <button onClick={()=>{props.changeFilter('completed')}}>Completed</button>
         </div>
     )
 }
