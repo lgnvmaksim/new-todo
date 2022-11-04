@@ -1,56 +1,72 @@
+import React, {useState, MouseEvent, KeyboardEvent} from 'react';
 import {FilteredType} from "../App";
-import {useState} from "react";
 
-type PropsType = {
-    title: string
-    tasks: TaskType[]
-    removeTask: (id:string)=>void
-    changeFilter:(value: FilteredType)=>void
-    addTask:(title:string)=>void
+
+export type TodolistType = {
+    tasks: TasksList[]
+    removeTask: (id: string) => void
+    changeFilter: (e: FilteredType) => void
+    addTask: (t: string) => void
 }
 
-type TaskType = {
+type TasksList = {
     id: string
     title: string
     isDone: boolean
-
+    head: string
 }
 
-export const Todolist = (props: PropsType) => {
-    let [title, setTitle] = useState('')
-    const addTaskButtonHandler = () => {
-        props.addTask(title)
-        setTitle('')
+export const Todolist = (props: TodolistType) => {
+
+    let [title, setTile] = useState('')
+
+    const onClickDeleteButton = (id: string) => {
+        props.removeTask(id)
     }
+    const onClickAddMessage = () => {
+        props.addTask(title)
+        setTile('')
+    }
+
+    const onKeyPressInput = (e:KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            props.addTask(title)
+    }}
+
     return (
         <div className={'wrapper'}>
-            <h3 className={'header'}>{props.title}</h3>
+            <h3>What is love</h3>
             <input
+                value={title}
                 className={'inputForText'}
-            value={title}
-            onChange={(e)=>{setTitle(e.currentTarget.value)}}
-            onKeyDown={(e)=>{if(e.key==='Enter'){addTaskButtonHandler()}}}/>
-            <button onClick={addTaskButtonHandler} className={'inputButton'}>+</button>
-            <div>
-                <ul>
-                    {props.tasks.map(el => {
-
-                        const onClickDeleteHandler = () => {
-                            props.removeTask(el.id)
-                        }
-
-                        return (
-                            <li key={el.id}>
-                                <input type="checkbox" checked={el.isDone}/>
-                                <span>{el.title}</span>
-                                <button onClick={onClickDeleteHandler}>X</button>
-                            </li>)
-                    })}
-                </ul>
-            </div>
-            <button onClick={()=>{props.changeFilter('all')}}>All</button>
-            <button onClick={()=>{props.changeFilter('active')}}>Active</button>
-            <button onClick={()=>{props.changeFilter('completed')}}>Completed</button>
+                onChange={(e) => {
+                    setTile(e.currentTarget.value)
+                }}
+                onKeyDown={onKeyPressInput}
+            />
+            <button className={'inputButton'} onClick={onClickAddMessage}>+</button>
+            <ul>
+                {props.tasks.map(el => {
+                    return (
+                        <li key={el.id}><input type="checkbox" checked={el.isDone}/>
+                            <span>{el.title}</span>
+                            <button onClick={() => onClickDeleteButton(el.id)}>X</button>
+                        </li>
+                    )
+                })}
+            </ul>
+            <button onClick={() => {
+                props.changeFilter('all')
+            }}>Всё шо есть
+            </button>
+            <button onClick={() => {
+                props.changeFilter('active')
+            }}>Фигачим их
+            </button>
+            <button onClick={() => {
+                props.changeFilter('completed')
+            }}>Завершенные
+            </button>
         </div>
     )
 }
