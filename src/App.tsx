@@ -15,45 +15,35 @@ function App() {
         { id: v1(), title: "GraphQL", isDone: false },
     ]);
 
-    function removeTask(id: string) {
-        let filteredTasks = tasks.filter(t => t.id != id);
-        setTasks(filteredTasks);
+    let [filter, setFilter] = useState<FilterValuesType>('all')
+
+    const removeTasks = (id:string) => {
+        setTasks(tasks.filter(f=>f.id!==id))
     }
 
-    function addTask(title: string) {
-        let task = { id: v1(), title: title, isDone: false };
-        let newTasks = [task, ...tasks];
-        setTasks(newTasks);
+    let tasksForTodolist = tasks
+    if (filter === 'active') {
+        tasksForTodolist = tasks.filter(f=>!f.isDone)
+    }
+    if (filter === 'completed') {
+        tasksForTodolist = tasks.filter(f=>f.isDone)
     }
 
-    let [filter, setFilter] = useState<FilterValuesType>("all");
-
-    let tasksForTodolist = tasks;
-
-    if (filter === "active") {
-        tasksForTodolist = tasks.filter(t => t.isDone === false);
-    }
-    if (filter === "completed") {
-        tasksForTodolist = tasks.filter(t => t.isDone === true);
+    const changeFilterButton = (value:FilterValuesType) => {
+        setFilter(value)
     }
 
-    function changeFilter(value: FilterValuesType) {
-        setFilter(value);
-    }
-
-    const changeCheckBox = (eventValue:boolean, taskID: string) => {
-        setTasks(tasks.map(el=>el.id===taskID ? {...el, isDone:eventValue} : el))
+    const addTask = (text:string) => {
+        setTasks([{ id: v1(), title: text, isDone: true },...tasks])
     }
 
 
     return (
         <div className="App">
-            <Todolist title="What to learn"
-                      tasks={tasksForTodolist}
-                      removeTask={removeTask}
-                      changeFilter={changeFilter}
-                      addTask={addTask}
-                      changeCheckBox={changeCheckBox}/>
+            <Todolist tasks={tasksForTodolist}
+                      removeTasks={removeTasks}
+                      changeFilterButton={changeFilterButton}
+                      addTask={addTask}/>
         </div>
     );
 }
